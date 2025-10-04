@@ -76,7 +76,10 @@ function App() {
       let agentResponse: AgentResponse;
 
       try {
-        agentResponse = parseLLMJson(data);
+        // Extract JSON from markdown code blocks if present
+        const jsonMatch = data.match(/```json\s*([\s\S]*?)\s*```/);
+        const jsonData = jsonMatch ? jsonMatch[1] : data;
+        agentResponse = parseLLMJson(jsonData);
       } catch (error) {
         agentResponse = {
           response: {
