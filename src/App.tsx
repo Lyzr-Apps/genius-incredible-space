@@ -144,13 +144,21 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-green-50 to-gray-50 flex flex-col">
+    <div
+      className="min-h-screen flex flex-col"
+      style={{
+        backgroundColor: '#F8FAF7',
+        fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+        color: '#47465B',
+        boxShadow: '0 4px 8px rgba(0,0,0,0.05)'
+      }}
+    >
       {/* Header */}
       <header className="bg-white shadow-sm border-b border-purple-100">
         <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-center">
           <div className="flex items-center space-x-3">
             <span className="text-3xl">🧘</span>
-            <h1 className="text-2xl font-semibold text-gray-700 tracking-wide">
+            <h1 className="text-2xl font-semibold tracking-wide" style={{ color: '#47465B', fontFamily: 'Playfair Display', fontWeight: 600, textShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
               MindMate
             </h1>
           </div>
@@ -159,15 +167,24 @@ function App() {
 
       {/* Chat Container */}
       <div className="flex-1 max-w-4xl mx-auto w-full px-6 py-8">
-        <div className="bg-white rounded-3xl shadow-lg h-full flex flex-col">
+        <div
+          className="rounded-3xl shadow-lg h-full flex flex-col"
+          style={{ backgroundColor: '#FFFFFF', boxShadow: '0 8px 32px rgba(185, 167, 240, 0.25)' }}
+        >
           {/* Messages Area */}
           <div className="flex-1 p-6 overflow-y-auto">
             {messages.length === 0 ? (
               <div className="h-full flex items-center justify-center">
                 <div className="text-center space-y-4">
                   <div className="text-6xl">💭</div>
-                  <h2 className="text-xl font-medium text-gray-600">Welcome to MindMate</h2>
-                  <p className="text-gray-500 max-w-md">
+                  <h2
+                    className="text-xl font-medium"
+                    style={{ color: '#47465B', fontFamily: 'Inter' }}
+                  >Welcome to MindMate</h2>
+                  <p
+                    className="text-gray-500 max-w-md"
+                    style={{ color: '#47465B', opacity: 0.8 }}
+                  >
                     This is a calm, judgment-free space for you to share your thoughts and feelings.
                     I am here to listen and support you.
                   </p>
@@ -183,16 +200,23 @@ function App() {
                     } animate-fade-in`}
                   >
                     {!message.isUser && (
-                      <div className="w-8 h-8 bg-purple-200 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                      <div
+                        className="w-8 h-8 rounded-full flex items-center justify-center mr-3 flex-shrink-0"
+                        style={{ backgroundColor: '#B9A7F0' }}
+                      >
                         <span className="text-lg">🤍</span>
                       </div>
                     )}
                     <div
                       className={`max-w-xs lg:max-w-md px-4 py-3 rounded-2xl shadow-sm ${
                         message.isUser
-                          ? 'bg-gray-100 text-gray-800 rounded-br-lg'
-                          : 'bg-purple-100 text-gray-800 rounded-bl-lg'
+                          ? 'text-gray-800 rounded-br-lg'
+                          : 'text-gray-800 rounded-bl-lg'
                       }`}
+                      style={{
+                        backgroundColor: message.isUser ? '#AEE7D8' : '#B9A7F0',
+                        boxShadow: '0 4px 16px rgba(185, 167, 240, 0.15)'
+                      }}
                     >
                       <p className="text-sm leading-relaxed">{message.text}</p>
                       <p className={`text-xs mt-2 opacity-70 ${
@@ -234,15 +258,25 @@ function App() {
                   onChange={(e) => setInputText(e.target.value)}
                   onKeyPress={handleKeyPress}
                   placeholder="Share your thoughts..."
-                  className="w-full px-4 py-3 border-2 border-purple-200 rounded-2xl focus:outline-none focus:border-purple-300 resize-none bg-gray-50 text-gray-700 placeholder-gray-500 transition-colors"
+                  className="w-full px-4 py-3 border-2 rounded-2xl focus:outline-none resize-none transition-colors"
                   rows={1}
                   disabled={isTyping}
+                  style={{
+                    borderColor: '#B9A7F0',
+                    backgroundColor: '#F8FAF7',
+                    color: '#47465B',
+                    borderRadius: '16px'
+                  }}
                 />
               </div>
               <button
                 onClick={sendMessage}
                 disabled={!inputText.trim() || isTyping}
-                className="bg-purple-300 hover:bg-purple-400 disabled:bg-gray-300 disabled:cursor-not-allowed text-white p-3 rounded-2xl transition-colors shadow-sm"
+                className="text-white p-3 rounded-2xl transition-colors shadow-sm hover:opacity-80 disabled:opacity-60 disabled:cursor-not-allowed"
+                style={{
+                  backgroundColor: '#B9A7F0',
+                  boxShadow: '0 4px 16px rgba(185, 167, 240, 0.2)'
+                }}
               >
                 <svg className="w-5 h-5 transform rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
