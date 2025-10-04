@@ -80,36 +80,33 @@ function App() {
         const jsonMatch = data.match(/```json\s*([\s\S]*?)\s*```/);
         const jsonData = jsonMatch ? jsonMatch[1] : data;
 
-        const parsed = parseLLMJson(jsonData);
+        let parsed = parseLLMJson(jsonData);
 
-        if (parsed \u0026\u0026 parsed.success === false) {
-          // parseLLMJson failed, use fallback
-          throw new Error(parsed.error || 'JSON parsing failed');
+        // If parseLLMJson returns a failure object, fall back to manual parsing
+        if (parsed && typeof parsed === 'object' && (parsed as any).success === false) {
+          parsed = JSON.parse(jsonData);
         }
 
-        // Parse the response to make sure it matches our expected format
-        const responseData = typeof parsed === 'object' \u0026\u0026 parsed !== null ? parsed : JSON.parse(jsonData);
-
         // Check if the parsed data has the expected structure
-        if (responseData \u0026\u0026 responseData.response \u0026\u0026 responseData.response.message) {
-          agentResponse = responseData as AgentResponse;
+        if (parsed && (parsed as AgentResponse).response && (parsed as AgentResponse).response.message) {
+          agentResponse = parsed as AgentResponse;
         } else {
-          throw new Error('Invalid agent response structure');
+          throw new Error('Invalid response format');
         }
       } catch (error) {
         console.error('Agent response error:', error);
         console.error('Raw response:', data);
         agentResponse = {
           response: {
-            message: "You're feeling overwhelmed right now, and that's completely understandable. Work stress can affect anyone. Tell me more about what's been happening that's making you feel this way?",
-            tone: "empathetic",
-            focus_area: "workplace_stress",
-            conversation_type: "exploration"
+            message: "Tell me more about what is on your mind, I am here to listen and support you.",
+            tone: "supportive",
+            focus_area: "emotional_support",
+            conversation_type: "active_listening"
           },
           metadata: {
             response_type: "therapeutic",
             safety_level: "appropriate",
-            engagement_style: "exploratory"
+            engagement_style: "supportive"
           }
         };
       }
@@ -130,7 +127,7 @@ function App() {
       console.error('Error contacting agent:', error);
       const errorMessage: Message = {
         id: generateRandomId(),
-        text: "I'm here for you. Sometimes it's good to just be present with your feelings. How are you feeling right now?",
+        text: "I am here for you. Sometimes it is good to just be present with your feelings. How are you feeling right now?",
         isUser: false,
         timestamp: new Date()
       };
@@ -172,7 +169,7 @@ function App() {
                   <h2 className="text-xl font-medium text-gray-600">Welcome to MindMate</h2>
                   <p className="text-gray-500 max-w-md">
                     This is a calm, judgment-free space for you to share your thoughts and feelings.
-                    I'm here to listen and support you.
+                    I am here to listen and support you.
                   </p>
                 </div>
               </div>
