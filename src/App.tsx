@@ -79,19 +79,37 @@ function App() {
         // Extract JSON from markdown code blocks if present
         const jsonMatch = data.match(/```json\s*([\s\S]*?)\s*```/);
         const jsonData = jsonMatch ? jsonMatch[1] : data;
-        agentResponse = parseLLMJson(jsonData);
+
+        const parsed = parseLLMJson(jsonData);
+
+        if (parsed \u0026\u0026 parsed.success === false) {
+          // parseLLMJson failed, use fallback
+          throw new Error(parsed.error || 'JSON parsing failed');
+        }
+
+        // Parse the response to make sure it matches our expected format
+        const responseData = typeof parsed === 'object' \u0026\u0026 parsed !== null ? parsed : JSON.parse(jsonData);
+
+        // Check if the parsed data has the expected structure
+        if (responseData \u0026\u0026 responseData.response \u0026\u0026 responseData.response.message) {
+          agentResponse = responseData as AgentResponse;
+        } else {
+          throw new Error('Invalid agent response structure');
+        }
       } catch (error) {
+        console.error('Agent response error:', error);
+        console.error('Raw response:', data);
         agentResponse = {
           response: {
-            message: "I understand you're going through something right now. Sometimes it's good to just share your feelings. I'm here to listen and support you.",
+            message: "You're feeling overwhelmed right now, and that's completely understandable. Work stress can affect anyone. Tell me more about what's been happening that's making you feel this way?",
             tone: "empathetic",
-            focus_area: "emotional support",
-            conversation_type: "active listening"
+            focus_area: "workplace_stress",
+            conversation_type: "exploration"
           },
           metadata: {
             response_type: "therapeutic",
             safety_level: "appropriate",
-            engagement_style: "supportive"
+            engagement_style: "exploratory"
           }
         };
       }
